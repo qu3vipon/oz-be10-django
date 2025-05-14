@@ -30,6 +30,7 @@ urlpatterns = [
     # 127.0.0.1:8000/admin/ -> admin.site.urls
     path('admin/', admin.site.urls),
 
-    # 127.0.0.1:8000/aabcd/
-    path("<str:code>/", views.redirect_view, name="short_url_redirect"),
+    # GET 127.0.0.1:8000/x/ -> code 값을 x로 갖는 short url을 조회 -> 리디렉트
+    # DELETE 127.0.0.1:8000/x/ -> code 값을 x로 갖는 short url을 삭제하고 싶다
+    path("<str:code>/", views.ShortURLDetailView.as_view(), name="short_url_detail"),
 ]

@@ -1,4 +1,6 @@
+from django.db.models import F
 from django.shortcuts import render, redirect, get_object_or_404
+from django.views import View
 
 from shortener.forms import ShortURLForm
 from shortener.models import ShortURL
@@ -24,15 +26,32 @@ def short_url_create_view(request):
     return redirect("/")
 
 
-def redirect_view(request, code):
-    short_url = get_object_or_404(ShortURL, code=code)
-    short_url.access_count += 1
-    short_url.save()
-    return redirect(short_url.original_url)
+# Function Based View = 함수형 뷰
+def short_url_detail_view(request, code):
+    # Redirect
+    if request.method == "GET":
+        short_url = get_object_or_404(ShortURL, code=code)
+        short_url.access_count = F("access_count") + 1
+        short_url.save()
+        return redirect(short_url.original_url)
+
+    # 삭제 기능
+    # HTTP 원칙대로면 DELETE로 처리해야 하지만,
+    # HTML Form에서 DELETE 요청을 보낼 수 없기 때문에 POST로 처리
+    elif request.method == "POST":
+        short_url = get_object_or_404(ShortURL, code=code)
+        short_url.delete()
+        return redirect("/")
 
 
+class ShortURLDetailView(View):
+    def get(self, request, code):
+        short_url = get_object_or_404(ShortURL, code=code)
+        short_url.access_count = F("access_count") + 1
+        short_url.save()
+        return redirect(short_url.original_url)
 
-# Redirect 기능 구현
-# 삭제 기능 구현
-# 클래스형 뷰(Class-based View)
-# Django ORM 데이터
+    def post(self, request, code):
+        short_url = get_object_or_404(ShortURL, code=code)
+        short_url.delete()
+        return redirect("/")
