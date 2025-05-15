@@ -17,20 +17,17 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from shortener import views
+from shortener import views, apis
 
 
 urlpatterns = [
-    # 127.0.0.1:8000/ -> home_view() -> html
+    # Django 방식
     path("", views.home_view, name="home"),
-
-    # 127.0.0.1:8000/short-urls/ -> short_url_create_view()
     path("short-urls/", views.short_url_create_view, name="shorten_url"),
-
-    # 127.0.0.1:8000/admin/ -> admin.site.urls
     path('admin/', admin.site.urls),
-
-    # GET 127.0.0.1:8000/x/ -> code 값을 x로 갖는 short url을 조회 -> 리디렉트
-    # DELETE 127.0.0.1:8000/x/ -> code 값을 x로 갖는 short url을 삭제하고 싶다
     path("<str:code>/", views.ShortURLDetailView.as_view(), name="short_url_detail"),
+
+    # DRF 방식
+    path("api/short-urls/", apis.ShortURLAPIView.as_view(), name="short_url_api"),
+    path("api/generics/short-urls/", apis.ShortURLGenericAPIView.as_view()),
 ]

@@ -22,3 +22,13 @@ class ShortURL(models.Model):
             code += random.choice(characters)
 
         self.code = code
+
+    @staticmethod
+    def generate_code_two():
+        characters = string.ascii_letters + string.digits
+
+        code = ""
+        for _ in range(8):
+            code += random.choice(characters)
+
+        return code
