@@ -1,0 +1,15 @@
+services:
+  db:
+    container_name: ozcoding-db
+    image: mysql:8.0
+    restart: always
+    volumes:
+      - local_db:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: ozcoding
+      MYSQL_ROOT_PASSWORD: ozcoding_pw
+    ports:
+      - "33060:3306"
+
+volumes:
+  local_db:

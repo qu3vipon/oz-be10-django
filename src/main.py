@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.responses import Response, HTMLResponse, FileResponse
 from pydantic import BaseModel
 
@@ -38,7 +38,20 @@ class NowResponse(BaseModel):
     now: datetime
 
 
-@app.get("/base-model")
-def base_model_response_handler() -> NowResponse:
+@app.get(
+    "/base-model",
+    response_model=NowResponse,
+)
+def base_model_response_handler():
     now = datetime.now()
     return NowResponse(now=now)
+
+
+@app.get(
+    "/raise-error",
+    status_code=200,
+)
+def raise_error_handler(error: bool = False):
+    if error:
+        raise HTTPException(status_code=400, detail="Error")
+    return {"message": "Success"}
