@@ -24,8 +24,12 @@ class ItemCreateRequest(BaseModel):
 
 
 @router.post("")
-def create_item_handler(name: str = Body(embed=True)):
-    return {"name": name}
+def create_item_handler(
+    body: ItemCreateRequest,
+    # name: str = Body(embed=True)
+):
+    return {"name": body.name}
+    # return {"name": name}
 
 
 # 4) Multi-Part Form
